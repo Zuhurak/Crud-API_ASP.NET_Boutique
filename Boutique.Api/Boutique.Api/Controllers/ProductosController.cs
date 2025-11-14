@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Boutique.Api.Data;
-using Boutique.Api.Models;
+using Boutique.Infrastructure.Data;
+using Boutique.Domain.Entities;
 
 namespace Boutique.Api.Controllers
 {
