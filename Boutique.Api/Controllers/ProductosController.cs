@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Boutique.Infrastructure.Data;
-using Boutique.Domain.Entities;
+using Boutique.Application.Interfaces;
+using Boutique.Application.DTOs;
 
 namespace Boutique.Api.Controllers
 {
@@ -9,25 +8,26 @@ namespace Boutique.Api.Controllers
     [Route("api/[controller]")]
     public class ProductosController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly IProductoService _servicio;
 
-        public ProductosController(AppDbContext context)
+        public ProductosController(IProductoService servicio)
         {
-            _context = context;
+            _servicio = servicio;
         }
 
         // GET: api/Productos
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            return Ok(await _context.Productos.ToListAsync());
+            var lista = await _servicio.GetAll();
+            return Ok(lista);
         }
 
         // GET: api/Productos/5
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var producto = await _context.Productos.FindAsync(id);
+            var producto = await _servicio.GetById(id);
 
             if (producto == null)
                 return NotFound();
@@ -37,24 +37,20 @@ namespace Boutique.Api.Controllers
 
         // POST: api/Productos
         [HttpPost]
-        public async Task<IActionResult> Post(Producto producto)
+        public async Task<IActionResult> Post(ProductoDto dto)
         {
-            _context.Productos.Add(producto);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(Get), new { id = producto.Id }, producto);
+            var creado = await _servicio.Create(dto);
+            return CreatedAtAction(nameof(Get), new { id = creado.Id }, creado);
         }
 
         // PUT: api/Productos/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, Producto producto)
+        public async Task<IActionResult> Put(int id, ProductoDto dto)
         {
-            if (id != producto.Id)
+            if (id != dto.Id)
                 return BadRequest();
 
-            _context.Entry(producto).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-
+            await _servicio.Update(dto);
             return NoContent();
         }
 
@@ -62,14 +58,7 @@ namespace Boutique.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var producto = await _context.Productos.FindAsync(id);
-
-            if (producto == null)
-                return NotFound();
-
-            _context.Productos.Remove(producto);
-            await _context.SaveChangesAsync();
-
+            await _servicio.Delete(id);
             return NoContent();
         }
     }

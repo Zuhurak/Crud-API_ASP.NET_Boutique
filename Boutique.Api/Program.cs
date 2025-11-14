@@ -1,15 +1,16 @@
+using Boutique.Application.Interfaces;
+using Boutique.Application.Services;
 using Boutique.Infrastructure;
-using Boutique.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
-);
-
+// Registrar Infrastructure (DbContext + repositorios)
 builder.Services.AddInfrastructure(builder.Configuration);
 
+// Registrar servicios de Application
+builder.Services.AddScoped<IProductoService, ProductoService>();
+
+// Configurar CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
@@ -18,12 +19,14 @@ builder.Services.AddCors(options =>
               .AllowAnyHeader());
 });
 
+// Agregar controladores y Swagger
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+// Configuración para desarrollo
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

@@ -7,6 +7,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Boutique.Api\**" />
+    <Compile Remove="Boutique.Domain\**" />
+    <Compile Remove="Boutique.Infrastructure\**" />
+    <Content Remove="Boutique.Api\**" />
+    <Content Remove="Boutique.Domain\**" />
+    <Content Remove="Boutique.Infrastructure\**" />
+    <EmbeddedResource Remove="Boutique.Api\**" />
+    <EmbeddedResource Remove="Boutique.Domain\**" />
+    <EmbeddedResource Remove="Boutique.Infrastructure\**" />
+    <None Remove="Boutique.Api\**" />
+    <None Remove="Boutique.Domain\**" />
+    <None Remove="Boutique.Infrastructure\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.11" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.11" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.11">
@@ -17,6 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Boutique.Application\Boutique.Application.csproj" />
     <ProjectReference Include="..\Boutique.Domain\Boutique.Domain.csproj" />
     <ProjectReference Include="..\Boutique.Infrastructure\Boutique.Infrastructure.csproj" />
   </ItemGroup>
